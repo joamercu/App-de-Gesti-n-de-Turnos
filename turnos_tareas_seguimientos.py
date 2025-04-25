@@ -10,7 +10,7 @@ from modules.transferencias import formulario_transferencia
 from modules.upload import cargar_excel_estado
 from modules.excel_export import exportar_excel
 from modules.config_turnos import configurar_turnos_usuario
-
+from modules.grupos import gestionar_grupos
 
 # ==================== CONFIGURACIONES ==================== #
 st.set_page_config(page_title="Gestión de Turnos 14x7", layout="wide")
@@ -24,7 +24,8 @@ modulo = st.sidebar.selectbox("📂 Selecciona un módulo", [
     "Carga de Estado de Tareas",
     "Exportar a Excel",
     "Calendario de Turnos",  # ⬅️ NUEVO
-    "Configuración de Turnos"
+    "Configuración de Turnos",
+"Gestión de Grupos"
 ])
 
 # ==================== LLAMADO A MÓDULOS ==================== #
@@ -51,6 +52,12 @@ elif modulo == "Exportar a Excel":
 elif modulo == "Calendario de Turnos":
     from modules.calendario import mostrar_calendario_turnos
     mostrar_calendario_turnos()
+
+
+
+# En la sección de módulos:
+elif modulo == "Gestión de Grupos":
+    gestionar_grupos()
 
 
 
