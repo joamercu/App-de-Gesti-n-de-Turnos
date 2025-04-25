@@ -12,21 +12,32 @@ from modules.excel_export import exportar_excel
 from modules.config_turnos import configurar_turnos_usuario
 from modules.grupos import gestionar_grupos
 
+# ¡ESTA LÍNEA DEBE IR AQUÍ!
+st.set_page_config(page_title="Gestión de Turnos 14x7", layout="wide")
+
 # ==================== CONFIGURACIONES ==================== #
 st.set_page_config(page_title="Gestión de Turnos 14x7", layout="wide")
 st.title("🕒 Gestión de Turnos, Tareas y Transferencias PROYECTOS METALMECANICA")
 
 # ==================== SELECCIÓN DE MÓDULOS ==================== #
-modulo = st.sidebar.selectbox("📂 Selecciona un módulo", [
-    "Reloj y Turno Actual",
-    "Tareas en Curso",
-    "Transferencia de Turno",
-    "Carga de Estado de Tareas",
-    "Exportar a Excel",
-    "Calendario de Turnos",  # ⬅️ NUEVO
-    "Configuración de Turnos",
-"Gestión de Grupos"
-])
+# En el archivo principal
+if 'modulo' not in st.session_state:
+    st.session_state.modulo = "Reloj y Turno Actual"
+
+# Selección de módulos
+modulo = st.sidebar.selectbox("📂 Selecciona un módulo",
+    [
+        "Reloj y Turno Actual",
+        "Tareas en Curso",
+        "Transferencia de Turno",
+        "Carga de Estado de Tareas",
+        "Exportar a Excel",
+        "Calendario de Turnos",
+        "Configuración de Turnos",
+        "Gestión de Grupos"
+    ],
+    key="modulo"  # Esto conecta el selectbox con session_state.modulo
+)
 
 # ==================== LLAMADO A MÓDULOS ==================== #
 if modulo == "Reloj y Turno Actual":
