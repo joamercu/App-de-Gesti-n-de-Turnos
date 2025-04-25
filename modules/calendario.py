@@ -3,23 +3,23 @@ import streamlit as st
 from datetime import datetime, timedelta
 import pytz
 from modules.grupos import GRUPOS_DETALLE  # importar desde módulo externo
-
-def grupo_activo(fecha_hoy):
-    # Definición de turnos rotativos 14x7 desde 2025-01-14
-    tz = pytz.timezone("America/Bogota")
-    FECHA_INICIO = tz.localize(datetime(2025, 1, 14))
-    dias_transcurridos = (fecha_hoy - FECHA_INICIO).days % 28
-
-    activos = []
-    if 0 <= dias_transcurridos < 14:
-        activos.append("Grupo A")
-    if 7 <= dias_transcurridos < 21:
-        activos.append("Grupo B")
-    if 14 <= dias_transcurridos < 28:
-        activos.append("Grupo C")
-    if dias_transcurridos >= 21 or dias_transcurridos < 7:
-        activos.append("Grupo D")
-    return activos
+from modules.config_turnos import grupo_activo
+#def grupo_activo(fecha_hoy):
+#    # Definición de turnos rotativos 14x7 desde 2025-01-14
+#    tz = pytz.timezone("America/Bogota")
+#    FECHA_INICIO = tz.localize(datetime(2025, 1, 14))
+#    dias_transcurridos = (fecha_hoy - FECHA_INICIO).days % 28
+#
+#    activos = []
+#    if 0 <= dias_transcurridos < 14:
+#        activos.append("Grupo A")
+#    if 7 <= dias_transcurridos < 21:
+#        activos.append("Grupo B")
+#    if 14 <= dias_transcurridos < 28:
+#        activos.append("Grupo C")
+#    if dias_transcurridos >= 21 or dias_transcurridos < 7:
+#        activos.append("Grupo D")
+#    return activos
 
 def mostrar_calendario_turnos():
     st.header("📅 Calendario de Turnos (30 días)")

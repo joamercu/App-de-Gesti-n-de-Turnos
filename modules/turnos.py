@@ -8,10 +8,10 @@ tz = pytz.timezone('America/Bogota')
 
 # Fecha de inicio de ciclo por grupo (14 días trabajo, 7 días descanso)
 FECHA_INICIO_GRUPOS = {
-    'Grupo A': tz.localize(datetime(2025, 4, 30)),
-    'Grupo B': tz.localize(datetime(2025, 4, 10)),
-    'Grupo C': tz.localize(datetime(2025, 4, 7)),
-    'Grupo D': tz.localize(datetime(2025, 4, 4)),
+    'Grupo A': datetime(2025, 4, 30),
+    'Grupo B': datetime(2025, 5, 10),
+    'Grupo C': datetime(2025, 5, 7),
+    'Grupo D': datetime(2025, 5, 3),
 }
 GRUPOS = list(FECHA_INICIO_GRUPOS.keys())
 

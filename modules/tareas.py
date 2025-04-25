@@ -6,6 +6,7 @@ import os
 GRUPOS = ["Grupo A", "Grupo B", "Grupo C", "Grupo D"]
 
 
+
 def mostrar_tareas():
     st.header("📝 Tareas en Curso")
 
