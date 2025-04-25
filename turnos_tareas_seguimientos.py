@@ -1,8 +1,14 @@
 # Archivo principal: app_streamlit.py
 import streamlit as st
+# ¡ESTA LÍNEA DEBE IR AQUÍ!
+st.set_page_config(page_title="Gestión de Turnos 14x7", layout="wide")
+
 import pandas as pd
 from datetime import datetime, timedelta
 import pytz
+import os
+if not os.path.exists('data'):
+    os.makedirs('data')
 
 from modules.reloj import mostrar_reloj
 from modules.tareas import mostrar_tareas
@@ -12,11 +18,9 @@ from modules.excel_export import exportar_excel
 from modules.config_turnos import configurar_turnos_usuario
 from modules.grupos import gestionar_grupos
 
-# ¡ESTA LÍNEA DEBE IR AQUÍ!
-st.set_page_config(page_title="Gestión de Turnos 14x7", layout="wide")
+
 
 # ==================== CONFIGURACIONES ==================== #
-st.set_page_config(page_title="Gestión de Turnos 14x7", layout="wide")
 st.title("🕒 Gestión de Turnos, Tareas y Transferencias PROYECTOS METALMECANICA")
 
 # ==================== SELECCIÓN DE MÓDULOS ==================== #
