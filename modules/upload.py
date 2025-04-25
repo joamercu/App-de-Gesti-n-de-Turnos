@@ -47,6 +47,7 @@ def cargar_excel_estado():
 
                     df_tareas.to_excel(tareas_path, index=False)
                     st.success("✅ Tareas actualizadas correctamente.")
+                    st.experimental_rerun()  # <--- ESTA LÍNEA HACE LA MAGIA
                 else:
                     st.error("❌ No se encontró el archivo de tareas.")
 
