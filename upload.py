@@ -47,6 +47,11 @@ def cargar_excel_estado():
 
                     df_tareas.to_excel(tareas_path, index=False)
                     st.success("✅ Tareas actualizadas correctamente.")
+
+                    # Agregar un botón para ir a Tareas en Curso
+                    if st.button("Ver Tareas Actualizadas"):
+                        st.session_state.modulo = "Tareas en Curso"
+                        st.rerun()  # Usar st.rerun() en lugar de experimental_rerun
                 else:
                     st.error("❌ No se encontró el archivo de tareas.")
 
