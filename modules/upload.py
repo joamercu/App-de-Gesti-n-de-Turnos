@@ -3,9 +3,15 @@ import streamlit as st
 import pandas as pd
 import os
 from PIL import Image
+from datetime import datetime
+
+
 
 def cargar_excel_estado():
     st.header("📤 Cargar estado actualizado de tareas")
+
+    # Crear una columna para el estado de la operación
+    status_container = st.empty()
 
     archivo = st.file_uploader("Selecciona un archivo Excel (.xlsx)", type=["xlsx"])
 
@@ -13,54 +19,83 @@ def cargar_excel_estado():
 
     if archivo is not None:
         try:
+            # Leer el archivo subido
             df = pd.read_excel(archivo)
-            st.success("✅ Archivo cargado correctamente.")
-            st.dataframe(df, use_container_width=True)
 
+            # Verificar columnas
             if not columnas_requeridas.issubset(set(df.columns)):
-                st.error(f"❌ El archivo debe contener las columnas: {', '.join(columnas_requeridas)}")
+                status_container.error(f"❌ El archivo debe contener las columnas: {', '.join(columnas_requeridas)}")
                 return None
 
-            # Guardar archivo localmente si se desea
-            nombre_base = archivo.name
-            if not nombre_base.startswith("estado_tareas_"):
-                nombre_archivo = f"estado_tareas_{nombre_base}"
-            else:
-                nombre_archivo = nombre_base
-            ruta_guardado = os.path.join("data", nombre_archivo)
-            with open(ruta_guardado, "wb") as f:
-                f.write(archivo.getbuffer())
+            # Mostrar preview de los cambios
+            st.subheader("📋 Vista previa de los cambios")
 
-            # Botón para aplicar cambios
-            if st.button("📥 Aplicar cambios a tareas"):
-                tareas_path = "data/tareas.xlsx"
-                if os.path.exists(tareas_path):
-                    df_tareas = pd.read_excel(tareas_path)
+            # Leer archivo actual de tareas si existe
+            tareas_path = "data/tareas.xlsx"
+            if os.path.exists(tareas_path):
+                df_tareas_actual = pd.read_excel(tareas_path)
 
-                    # Aplicar actualizaciones por ID
-                    for i, row in df.iterrows():
-                        idx = df_tareas[df_tareas["ID"] == row["ID"]].index
-                        if not idx.empty:
-                            for campo in ["Estado", "% Avance"]:
-                                if campo in df.columns:
-                                    df_tareas.loc[idx, campo] = row[campo]
+                # Crear DataFrame para mostrar los cambios
+                cambios = []
+                for i, row in df.iterrows():
+                    tarea_actual = df_tareas_actual[df_tareas_actual["ID"] == row["ID"]]
+                    if not tarea_actual.empty:
+                        estado_anterior = tarea_actual.iloc[0]["Estado"]
+                        estado_nuevo = row["Estado"]
+                        avance_anterior = tarea_actual.iloc[0].get("% Avance", 0)
+                        avance_nuevo = row.get("% Avance", 0)
 
-                    df_tareas.to_excel(tareas_path, index=False)
-                    st.success("✅ Tareas actualizadas correctamente.")
+                        if estado_anterior != estado_nuevo or avance_anterior != avance_nuevo:
+                            cambios.append({
+                                "ID": row["ID"],
+                                "Grupo": row["Grupo"],
+                                "Estado Anterior": estado_anterior,
+                                "Nuevo Estado": estado_nuevo,
+                                "Avance Anterior": avance_anterior,
+                                "Nuevo Avance": avance_nuevo
+                            })
 
-                    # Agregar un botón para ir a Tareas en Curso
-                    if st.button("Ver Tareas Actualizadas"):
-                        st.session_state.modulo = "Tareas en Curso"
-                        st.rerun()  # Usar st.rerun() en lugar de experimental_rerun
+                if cambios:
+                    st.dataframe(pd.DataFrame(cambios), use_container_width=True)
                 else:
-                    st.error("❌ No se encontró el archivo de tareas.")
+                    st.info("ℹ️ No hay cambios para aplicar")
+                    return None
 
-            return df
+                # Botón para aplicar cambios
+                if st.button("📥 Aplicar cambios a tareas"):
+                    try:
+                        # Aplicar actualizaciones por ID
+                        for i, row in df.iterrows():
+                            idx = df_tareas_actual[df_tareas_actual["ID"] == row["ID"]].index
+                            if not idx.empty:
+                                for campo in ["Estado", "% Avance"]:
+                                    if campo in df.columns:
+                                        df_tareas_actual.loc[idx, campo] = row[campo]
+
+                        # Agregar timestamp de última actualización
+                        df_tareas_actual["Última Actualización"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+                        # Guardar cambios
+                        df_tareas_actual.to_excel(tareas_path, index=False)
+
+                        # Mostrar mensaje de éxito
+                        status_container.success("✅ Tareas actualizadas correctamente!")
+
+                        # Agregar botón para ver tareas actualizadas
+                        if st.button("👀 Ver Tareas Actualizadas"):
+                            st.session_state.modulo = "Tareas en Curso"
+                            st.rerun()
+
+                    except Exception as e:
+                        status_container.error(f"❌ Error al actualizar tareas: {str(e)}")
+            else:
+                status_container.error("❌ No se encontró el archivo de tareas base.")
 
         except Exception as e:
-            st.error(f"❌ Error al leer el archivo: {e}")
+            status_container.error(f"❌ Error al leer el archivo: {str(e)}")
 
     return None
+
 
 def cargar_fotos_referencia():
     st.header("📸 Subir imágenes de referencia de la tarea")
