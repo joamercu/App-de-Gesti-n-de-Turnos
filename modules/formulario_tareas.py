@@ -254,7 +254,7 @@ def editar_tarea_existente():
                     grupo = st.selectbox(
                         "Grupo",
                         ["Grupo A", "Grupo B", "Grupo C"],
-                        index=["Grupo A", "Grupo B", "Grupo C"].index(tarea.get('Grupo', 'Grupo A'))
+                        index=["Grupo A", "Grupo B", "Grupo C", "Grupo D"].index(tarea.get('Grupo', 'Grupo A'))
                     )
                     responsable = st.text_input("Responsable", value=str(tarea.get('Responsable', '')))
                     estado = st.selectbox(
