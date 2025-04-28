@@ -149,8 +149,8 @@ def mostrar_reloj():
     try:
         df_tareas = pd.read_excel("data/tareas.xlsx")
         st.markdown("---")
-        st.subheader("🧾 Últimas 5 tareas Asignadas")
-        st.dataframe(df_tareas.tail(5), use_container_width=True)
+        st.subheader("🧾 Últimas 10 tareas Asignadas")
+        st.dataframe(df_tareas.tail(10), use_container_width=True)
     except Exception as e:
         st.info("ℹ️ No se encontraron tareas recientes o el archivo no está disponible.")
 
