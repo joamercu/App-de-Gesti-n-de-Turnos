@@ -3,5 +3,4 @@ pandas
 openpyxl
 pytz
 Pillow
-ploty
-plotly.express
+plotly
